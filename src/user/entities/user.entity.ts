@@ -1,6 +1,7 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Wedding } from 'src/wedding/entities/wedding.entity';
 
 @ObjectType()
 @Schema()
@@ -11,25 +12,28 @@ export class User {
   @Field(() => String)
   _id: MongooseSchema.Types.ObjectId;
 
-  // Array of Group Ids
-  // @Field(() => [Group])
-  // @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Group'})
-  // groups: Group[]
+  @Field(() => Wedding)
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Wedding' })
+  wedding: Wedding;
+
+  @Field(() => [Wedding])
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Wedding' })
+  otherWeddings: Wedding[];
 
   @Field(() => String)
-  @Prop()
+  @Prop({ required: true })
   name: String;
 
   @Field(() => String)
-  @Prop({ unique: true })
+  @Prop({ unique: true, required: true })
   email: String;
 
   @Field(() => String)
-  @Prop()
+  @Prop({ required: true })
   password: String;
 
   @Field(() => Boolean)
-  @Prop()
+  @Prop({ default: false })
   isVerified: Boolean;
 }
 

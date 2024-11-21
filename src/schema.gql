@@ -2,6 +2,142 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Vendor {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Hantaran {
+  name: String!
+  price: Float!
+  purchased: Boolean!
+}
+
+type Wedding {
+  _id: String!
+  owner: User!
+  member: [User!]!
+  note: String!
+  budget: Float!
+  weddingOrganizer: Vendor!
+  totalWeddingOrganizerPrice: Float!
+  makeupArtist: Vendor!
+  totalMakeupArtistPrice: Float!
+  hantaran: [Hantaran!]!
+  riasHantaran: Vendor!
+  totalRiasHantaranPrice: Float!
+  outfitVendor: Vendor!
+  totalOutfitPrice: Float!
+  ringVendor: Vendor!
+  totalRingPrice: Float!
+  masterOfCeremony: Vendor!
+  totalMasterOfCeremonyPrice: Float!
+  documentation: Vendor!
+  totalDocumentationPrice: Float!
+  catering: Vendor!
+  totalCateringPrice: Float!
+  venue: Vendor!
+  totalVenuePrice: Float!
+  nasyid: Vendor!
+  totalNasyidPrice: Float!
+  souvenir: Vendor!
+  totalSouvenirPrice: Float!
+  invitation: Vendor!
+  totalInvitationPrice: Float!
+  uniform: Vendor!
+  totalUniformPrice: Float!
+  startDate: DateTime!
+  endDate: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  _id: String!
+  wedding: Wedding!
+  otherWeddings: [Wedding!]!
+  name: String!
+  email: String!
+  password: String!
+  isVerified: Boolean!
+}
+
+type Service {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
   getHello: String!
+  users: [User!]!
+
+  """Get a user profile based on id"""
+  findUserById(id: String!): User!
+  wedding(id: Int!): Wedding!
+  vendor(id: Int!): Vendor!
+  service(id: Int!): Service!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: String!): User!
+  createWedding(createWeddingInput: CreateWeddingInput!): Wedding!
+  updateWedding(updateWeddingInput: UpdateWeddingInput!): Wedding!
+  removeWedding(id: Int!): Wedding!
+  createVendor(createVendorInput: CreateVendorInput!): Vendor!
+  updateVendor(updateVendorInput: UpdateVendorInput!): Vendor!
+  removeVendor(id: Int!): Vendor!
+  createService(createServiceInput: CreateServiceInput!): Service!
+  updateService(updateServiceInput: UpdateServiceInput!): Service!
+  removeService(id: Int!): Service!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+  _id: String!
+}
+
+input CreateWeddingInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateWeddingInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateVendorInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateVendorInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateServiceInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateServiceInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }

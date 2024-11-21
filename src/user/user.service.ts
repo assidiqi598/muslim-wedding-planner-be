@@ -3,7 +3,7 @@ import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './entities/user.entity';
-import { Model } from 'mongoose';
+import { Model, Schema as MongooseSchema } from 'mongoose';
 
 @Injectable()
 export class UserService {
@@ -12,22 +12,26 @@ export class UserService {
     private userModel: Model<UserDocument>,
   ) {}
   create(createUserInput: CreateUserInput) {
-    return 'This action adds a new user';
+    const createdUser = new this.userModel(createUserInput);
+    return createdUser.save();
   }
 
   findAll() {
-    return `This action returns all user`;
+    return this.userModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findById(id: MongooseSchema.Types.ObjectId) {
+    return this.userModel.findById(id);
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
+  updateById(
+    id: MongooseSchema.Types.ObjectId,
+    updateUserInput: UpdateUserInput,
+  ) {
+    return this.userModel.findByIdAndUpdate(id, updateUserInput, { new: true });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  removeById(id: MongooseSchema.Types.ObjectId) {
+    return this.userModel.deleteOne({ _id: id });
   }
 }

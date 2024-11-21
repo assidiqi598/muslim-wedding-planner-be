@@ -8,6 +8,9 @@ import { AppService } from './app.service';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { WeddingModule } from './wedding/wedding.module';
+import { VendorModule } from './vendor/vendor.module';
+import { ServiceModule } from './service/service.module';
 
 @Module({
   imports: [
@@ -32,6 +35,9 @@ import { UserModule } from './user/user.module';
       cache: true,
     }),
     UserModule,
+    WeddingModule,
+    VendorModule,
+    ServiceModule,
   ],
   controllers: [],
   providers: [AppService, AppResolver],
