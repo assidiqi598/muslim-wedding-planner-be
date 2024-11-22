@@ -13,11 +13,19 @@ export class User {
   _id: MongooseSchema.Types.ObjectId;
 
   @Field(() => Wedding)
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Wedding' })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Wedding',
+    required: false,
+  })
   wedding: Wedding;
 
   @Field(() => [Wedding])
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Wedding' })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Wedding',
+    required: false,
+  })
   otherWeddings: Wedding[];
 
   @Field(() => String)

@@ -2,15 +2,39 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Service {
+  _id: String!
+  name: String!
+  priceRange: String!
+  description: String!
+}
+
 type Vendor {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  _id: String!
+  name: String!
+  description: String!
+  email: String!
+  phoneNumber: String!
+  address: String!
+  postCode: Float!
+  kecamatan: String!
+  kabupaten: String!
+  province: String!
+  link: String!
+  services: [Service!]!
+  weddings: Wedding!
 }
 
 type Hantaran {
   name: String!
   price: Float!
-  purchased: Boolean!
+  isPurchased: Boolean!
+}
+
+type SelectedVendor {
+  vendor: Vendor!
+  cost: Float!
+  note: String!
 }
 
 type Wedding {
@@ -19,21 +43,16 @@ type Wedding {
   member: [User!]!
   note: String!
   budget: Float!
-  weddingOrganizer: Vendor!
-  totalWeddingOrganizerPrice: Float!
-  makeupArtist: Vendor!
-  totalMakeupArtistPrice: Float!
+  weddingOrganizer: SelectedVendor!
+  makeupArtist: SelectedVendor!
   hantaran: [Hantaran!]!
-  riasHantaran: Vendor!
-  totalRiasHantaranPrice: Float!
-  outfitVendor: Vendor!
-  totalOutfitPrice: Float!
-  ringVendor: Vendor!
-  totalRingPrice: Float!
-  masterOfCeremony: Vendor!
-  totalMasterOfCeremonyPrice: Float!
-  documentation: Vendor!
-  totalDocumentationPrice: Float!
+  riasHantaran: SelectedVendor!
+  weddingSuite: SelectedVendor!
+  weddingDress: SelectedVendor!
+  groomRing: SelectedVendor!
+  brideRing: SelectedVendor!
+  masterOfCeremony: SelectedVendor!
+  documentation: SelectedVendor!
   catering: Vendor!
   totalCateringPrice: Float!
   venue: Vendor!
@@ -63,11 +82,6 @@ type User {
   email: String!
   password: String!
   isVerified: Boolean!
-}
-
-type Service {
-  """Example field (placeholder)"""
-  exampleField: Int!
 }
 
 type Query {
