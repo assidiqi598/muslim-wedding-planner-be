@@ -9,19 +9,20 @@ import { Schema as MongooseSchema } from 'mongoose';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Mutation(() => User)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.userService.create(createUserInput);
+  @Mutation(() => String)
+  async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
+    return (await this.userService.create(createUserInput))._id.toString();
   }
 
-  @Query(() => [User], { name: 'users' })
-  findAll() {
-    return this.userService.findAll();
-  }
+  // @Query(() => [User], { name: 'findAllUsers', nullable: true })
+  // findAll() {
+  //   return this.userService.findAll();
+  // }
 
   @Query(() => User, {
     name: 'findUserById',
     description: 'Get a user profile based on id',
+    nullable: true,
   })
   findById(
     @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
@@ -29,9 +30,12 @@ export class UserResolver {
     return this.userService.findById(id);
   }
 
-  @Mutation(() => User)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.userService.updateById(updateUserInput._id, updateUserInput);
+  @Mutation(() => Boolean)
+  async updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+    return (
+      (await this.userService.updateById(updateUserInput._id, updateUserInput))
+        ._id !== undefined
+    );
   }
 
   @Mutation(() => User)

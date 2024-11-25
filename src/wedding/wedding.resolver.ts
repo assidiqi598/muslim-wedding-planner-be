@@ -3,33 +3,79 @@ import { WeddingService } from './wedding.service';
 import { Wedding } from './entities/wedding.entity';
 import { CreateWeddingInput } from './dto/create-wedding.input';
 import { UpdateWeddingInput } from './dto/update-wedding.input';
+import { Schema as MongooseSchema } from 'mongoose';
+import { UpdateWeddingMemberInput } from './dto/update-wedding-member.input';
+import { UpdateWeddingHantaranInput } from './dto/update-wedding-hantaran.input';
 
 @Resolver(() => Wedding)
 export class WeddingResolver {
   constructor(private readonly weddingService: WeddingService) {}
 
-  @Mutation(() => Wedding)
-  createWedding(@Args('createWeddingInput') createWeddingInput: CreateWeddingInput) {
-    return this.weddingService.create(createWeddingInput);
+  @Mutation(() => String)
+  async createWedding(
+    @Args('createWeddingInput') createWeddingInput: CreateWeddingInput,
+  ) {
+    return (
+      await this.weddingService.create(createWeddingInput)
+    )._id.toString();
   }
 
-  @Query(() => [Wedding], { name: 'wedding' })
-  findAll() {
+  @Query(() => [Wedding], { name: 'findAllWeddings' })
+  findAllWeddings() {
     return this.weddingService.findAll();
   }
 
-  @Query(() => Wedding, { name: 'wedding' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.weddingService.findOne(id);
+  @Query(() => Wedding, { name: 'findWeddingById' })
+  findOneWedding(
+    @Args('id', { type: () => Int }) id: MongooseSchema.Types.ObjectId,
+  ) {
+    return this.weddingService.findById(id);
   }
 
-  @Mutation(() => Wedding)
-  updateWedding(@Args('updateWeddingInput') updateWeddingInput: UpdateWeddingInput) {
-    return this.weddingService.update(updateWeddingInput.id, updateWeddingInput);
+  @Mutation(() => Boolean)
+  async updateWeddingInfo(
+    @Args('updateWeddingInput') updateWeddingInput: UpdateWeddingInput,
+  ) {
+    return (
+      (
+        await this.weddingService.updateGeneralInfo(
+          updateWeddingInput._id,
+          updateWeddingInput,
+        )
+      )._id !== undefined
+    );
   }
 
-  @Mutation(() => Wedding)
-  removeWedding(@Args('id', { type: () => Int }) id: number) {
-    return this.weddingService.remove(id);
+  @Mutation(() => Boolean)
+  updateWeddingMember(
+    @Args('updateWeddingMemberInput')
+    updateWeddingMemberInput: UpdateWeddingMemberInput,
+  ) {
+    const ret = this.weddingService.updateMember(
+      updateWeddingMemberInput._id,
+      updateWeddingMemberInput,
+    );
+
+    console.log('ret', ret);
+
+    return ret;
+  }
+
+  @Mutation(() => Boolean)
+  updateWeddingHantaran(
+    @Args('updateWeddingHantaranInput')
+    updateWeddingHantaranInput: UpdateWeddingHantaranInput,
+  ) {
+    return this.weddingService.updateHantaran(
+      updateWeddingHantaranInput._id,
+      updateWeddingHantaranInput,
+    );
+  }
+
+  @Mutation(() => Boolean)
+  removeWedding(
+    @Args('id', { type: () => Int }) id: MongooseSchema.Types.ObjectId,
+  ) {
+    return this.weddingService.removeById(id);
   }
 }

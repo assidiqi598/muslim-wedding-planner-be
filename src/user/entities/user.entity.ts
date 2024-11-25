@@ -1,7 +1,16 @@
-import { ObjectType, Field } from '@nestjs/graphql';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Wedding } from 'src/wedding/entities/wedding.entity';
+
+export enum Gender {
+  MAN = 'Pria',
+  WOMAN = 'Wanita',
+}
+
+registerEnumType(Gender, {
+  name: 'Gender',
+});
 
 @ObjectType()
 @Schema()
@@ -12,21 +21,21 @@ export class User {
   @Field(() => String)
   _id: MongooseSchema.Types.ObjectId;
 
-  @Field(() => Wedding)
+  @Field(() => Wedding, { nullable: true })
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'Wedding',
     required: false,
   })
-  wedding: Wedding;
+  wedding?: Wedding;
 
-  @Field(() => [Wedding])
+  @Field(() => [Wedding], { nullable: true })
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'Wedding',
     required: false,
   })
-  otherWeddings: Wedding[];
+  otherWeddings?: Wedding[];
 
   @Field(() => String)
   @Prop({ required: true })
@@ -40,10 +49,14 @@ export class User {
   @Prop({ required: true })
   password: String;
 
+  @Field(() => Gender)
+  @Prop({ type: String, enum: Gender, required: true })
+  gender: Gender;
+
   @Field(() => Boolean)
   @Prop({ default: false })
   isVerified: Boolean;
 }
 
-export type UserDocument = User & Document;
+export type UserDocument = HydratedDocument<User>;
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -1,200 +1,168 @@
-import { ObjectType, Field } from '@nestjs/graphql';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Schema as MongooseSchema } from 'mongoose';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument, Schema as MongooseSchema, Types } from 'mongoose';
 import { User } from 'src/user/entities/user.entity';
-import { Vendor } from 'src/vendor/entities/vendor.entity';
 import { Hantaran } from './hantaran.entity';
 import { SelectedVendor } from './selected-vendor.entity';
 
 @ObjectType()
+@Schema()
 export class Wedding {
   @Field(() => String)
   _id: MongooseSchema.Types.ObjectId;
 
-  @Field(() => User)
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
-  owner: User;
+  @Field(() => User, { nullable: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: false })
+  groom: User;
 
-  @Field(() => [User])
+  @Field(() => User, { nullable: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: false })
+  bride: User;
+
+  @Field(() => [User], { nullable: true })
   @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'User', required: false })
   member: User[];
 
   @Field(() => String)
-  @Prop({ required: false })
+  @Prop({ required: false, default: '' })
   note: String;
 
-  @Field(() => Number)
-  @Prop()
+  @Field(() => Int)
+  @Prop({ default: 0 })
   budget: Number;
 
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  weddingOrganizer: SelectedVendor;
+  @Field(() => [SelectedVendor], { nullable: true })
+  @Prop({ type: [SelectedVendor], required: false, default: [] })
+  vendors: SelectedVendor[];
+
+  @Field(() => [Hantaran], { nullable: true })
+  @Prop({ type: [Hantaran], required: false, default: [] })
+  hantaran: Hantaran[];
+
+  @Field(() => Date, { nullable: true })
+  @Prop({ type: Date, required: false })
+  startDate: Date;
+
+  @Field(() => Date, { nullable: true })
+  @Prop({ type: Date, required: false })
+  endDate: Date;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // weddingOrganizer: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalWeddingOrganizerPrice: Number;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  makeupArtist: SelectedVendor;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // makeupArtist: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalMakeupArtistPrice: Number;
 
-  @Field(() => [Hantaran])
-  @Prop({ required: false })
-  hantaran: Hantaran[];
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  riasHantaran: SelectedVendor;
+  // @Field(() => SelectedVendor)
+  // @Prop({ required: false })
+  // riasHantaran: SelectedVendor;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // riasHantaran: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalRiasHantaranPrice: Number;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  weddingSuite: SelectedVendor;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  weddingDress: SelectedVendor;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // outfitVendor: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalOutfitPrice: Number;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  groomRing: SelectedVendor;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  brideRing: SelectedVendor;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // ringVendor: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalRingPrice: Number;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  masterOfCeremony: SelectedVendor;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // masterOfCeremony: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalMasterOfCeremonyPrice: Number;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  documentation: SelectedVendor;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // documentation: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalDocumentationPrice: Number;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  catering: SelectedVendor;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // catering: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalCateringPrice: Number;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  venue: SelectedVendor;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // venue: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalVenuePrice: Number;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  nasyid: SelectedVendor;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // nasyid: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalNasyidPrice: Number;
-
-  @Field(() => SelectedVendor)
-  @Prop({ required: false })
-  souvenir: SelectedVendor;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
   // souvenir: Vendor;
 
-  // @Field(() => Number)
+  // @Field(() => Int)
   // @Prop({ required: false })
   // totalSouvenirPrice: Number;
 
-  @Field(() => Vendor)
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
-  invitation: Vendor;
+  // @Field(() => Vendor)
+  // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
+  // invitation: Vendor;
 
-  @Field(() => Number)
-  @Prop({ required: false })
-  totalInvitationPrice: Number;
+  // @Field(() => Int)
+  // @Prop({ required: false })
+  // totalInvitationPrice: Number;
 
-  @Field(() => Vendor)
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
-  uniform: Vendor;
+  // @Field(() => Vendor)
+  // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })
+  // uniform: Vendor;
 
-  @Field(() => Number)
-  @Prop({ required: false })
-  totalUniformPrice: Number;
-
-  @Field(() => Date)
-  @Prop({ type: Date, required: false })
-  startDate: Date;
-
-  @Field(() => Date)
-  @Prop({ type: Date, required: false })
-  endDate: Date;
+  // @Field(() => Int)
+  // @Prop({ required: false })
+  // totalUniformPrice: Number;
 }
-
-export type WeddingDocument = Wedding & Document;
 export const WeddingSchema = SchemaFactory.createForClass(Wedding);
+
+export type WeddingDocumentOverride = {
+  vendors: Types.DocumentArray<SelectedVendor>;
+  hantaran: Types.DocumentArray<Hantaran>;
+};
+
+export type WeddingDocument = HydratedDocument<
+  Wedding,
+  WeddingDocumentOverride
+>;

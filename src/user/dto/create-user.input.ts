@@ -11,7 +11,6 @@ export class CreateUserInput {
   @Field(() => String)
   password: String;
 
-  // Array of Group Ids
-  // @Field(() => [Group])
-  // groups: Group[]
+  @Field(() => String)
+  gender: String;
 }

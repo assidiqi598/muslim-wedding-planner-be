@@ -3,7 +3,7 @@ import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './entities/user.entity';
-import { Model, Schema as MongooseSchema } from 'mongoose';
+import { DeleteResult, Model, Schema as MongooseSchema } from 'mongoose';
 
 @Injectable()
 export class UserService {
@@ -11,27 +11,31 @@ export class UserService {
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
   ) {}
-  create(createUserInput: CreateUserInput) {
+  create(createUserInput: CreateUserInput): Promise<User> {
     const createdUser = new this.userModel(createUserInput);
     return createdUser.save();
   }
 
-  findAll() {
-    return this.userModel.find();
+  // findAll(): Promise<User[]> {
+  //   return this.userModel.find().exec();
+  // }
+
+  findById(id: MongooseSchema.Types.ObjectId): Promise<User> {
+    return this.userModel.findById(id).exec();
   }
 
-  findById(id: MongooseSchema.Types.ObjectId) {
-    return this.userModel.findById(id);
+  findByEmail(email: String): Promise<User> {
+    return this.userModel.findOne({ email }).exec();
   }
 
   updateById(
     id: MongooseSchema.Types.ObjectId,
     updateUserInput: UpdateUserInput,
-  ) {
+  ): Promise<User> {
     return this.userModel.findByIdAndUpdate(id, updateUserInput, { new: true });
   }
 
-  removeById(id: MongooseSchema.Types.ObjectId) {
+  removeById(id: MongooseSchema.Types.ObjectId): Promise<DeleteResult> {
     return this.userModel.deleteOne({ _id: id });
   }
 }

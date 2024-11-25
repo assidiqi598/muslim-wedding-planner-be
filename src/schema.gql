@@ -2,10 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Hantaran {
+  name: String!
+  price: Int!
+  isPurchased: Boolean!
+}
+
 type Service {
   _id: String!
   name: String!
-  priceRange: String!
+  displayName: String!
+}
+
+type VendorService {
+  service: Service!
+  priceRange: String
   description: String!
 }
 
@@ -13,60 +24,36 @@ type Vendor {
   _id: String!
   name: String!
   description: String!
-  email: String!
-  phoneNumber: String!
-  address: String!
-  postCode: Float!
+  email: String
+  phoneNumber: String
+  address: String
+  postCode: Int
   kecamatan: String!
   kabupaten: String!
   province: String!
-  link: String!
-  services: [Service!]!
-  weddings: Wedding!
-}
-
-type Hantaran {
-  name: String!
-  price: Float!
-  isPurchased: Boolean!
+  link: String
+  services: [VendorService!]!
+  weddings: Wedding
 }
 
 type SelectedVendor {
   vendor: Vendor!
-  cost: Float!
+  service: Service!
+  cost: Int!
   note: String!
 }
 
 type Wedding {
   _id: String!
-  owner: User!
-  member: [User!]!
+  groom: User
+  bride: User
+  member: [User!]
   note: String!
-  budget: Float!
-  weddingOrganizer: SelectedVendor!
-  makeupArtist: SelectedVendor!
-  hantaran: [Hantaran!]!
-  riasHantaran: SelectedVendor!
-  weddingSuite: SelectedVendor!
-  weddingDress: SelectedVendor!
-  groomRing: SelectedVendor!
-  brideRing: SelectedVendor!
-  masterOfCeremony: SelectedVendor!
-  documentation: SelectedVendor!
-  catering: Vendor!
-  totalCateringPrice: Float!
-  venue: Vendor!
-  totalVenuePrice: Float!
-  nasyid: Vendor!
-  totalNasyidPrice: Float!
-  souvenir: Vendor!
-  totalSouvenirPrice: Float!
-  invitation: Vendor!
-  totalInvitationPrice: Float!
-  uniform: Vendor!
-  totalUniformPrice: Float!
-  startDate: DateTime!
-  endDate: DateTime!
+  budget: Int!
+  vendors: [SelectedVendor!]
+  hantaran: [Hantaran!]
+  startDate: DateTime
+  endDate: DateTime
 }
 
 """
@@ -76,32 +63,41 @@ scalar DateTime
 
 type User {
   _id: String!
-  wedding: Wedding!
-  otherWeddings: [Wedding!]!
+  wedding: Wedding
+  otherWeddings: [Wedding!]
   name: String!
   email: String!
   password: String!
+  gender: Gender!
   isVerified: Boolean!
+}
+
+enum Gender {
+  MAN
+  WOMAN
 }
 
 type Query {
   getHello: String!
-  users: [User!]!
+  findAllUsers: [User!]
 
   """Get a user profile based on id"""
-  findUserById(id: String!): User!
-  wedding(id: Int!): Wedding!
+  findUserById(id: String!): User
+  findAllWeddings: [Wedding!]!
+  findWeddingById(id: Int!): Wedding!
   vendor(id: Int!): Vendor!
   service(id: Int!): Service!
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
+  createUser(createUserInput: CreateUserInput!): String!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: String!): User!
-  createWedding(createWeddingInput: CreateWeddingInput!): Wedding!
-  updateWedding(updateWeddingInput: UpdateWeddingInput!): Wedding!
-  removeWedding(id: Int!): Wedding!
+  createWedding(createWeddingInput: CreateWeddingInput!): String!
+  updateWeddingInfo(updateWeddingInput: UpdateWeddingInput!): Boolean!
+  updateWeddingMember(updateWeddingMemberInput: UpdateWeddingMemberInput!): Boolean!
+  updateWeddingHantaran(updateWeddingHantaranInput: UpdateWeddingHantaranInput!): Boolean!
+  removeWedding(id: Int!): Boolean!
   createVendor(createVendorInput: CreateVendorInput!): Vendor!
   updateVendor(updateVendorInput: UpdateVendorInput!): Vendor!
   removeVendor(id: Int!): Vendor!
@@ -114,24 +110,48 @@ input CreateUserInput {
   name: String!
   email: String!
   password: String!
+  gender: String!
 }
 
 input UpdateUserInput {
   name: String
   email: String
   password: String
+  gender: String
   _id: String!
+  wedding: String
+  otherWedings: [String!]
 }
 
 input CreateWeddingInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  groom: String
+  bride: String
 }
 
 input UpdateWeddingInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  groom: String
+  bride: String
+  _id: String!
+  note: String
+  budget: Int
+  startDate: DateTime
+  endDate: DateTime
+}
+
+input UpdateWeddingMemberInput {
+  _id: String!
+  member: [String!]!
+}
+
+input UpdateWeddingHantaranInput {
+  _id: String!
+  hantaran: [HantaranInput!]!
+}
+
+input HantaranInput {
+  name: String!
+  price: Int
+  isPurchased: Boolean
 }
 
 input CreateVendorInput {
