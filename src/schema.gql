@@ -120,7 +120,7 @@ input UpdateUserInput {
   gender: String
   _id: String!
   wedding: String
-  otherWedings: [String!]
+  otherWeddings: [String!]
 }
 
 input CreateWeddingInput {

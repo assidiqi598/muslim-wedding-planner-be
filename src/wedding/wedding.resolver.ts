@@ -6,6 +6,7 @@ import { UpdateWeddingInput } from './dto/update-wedding.input';
 import { Schema as MongooseSchema } from 'mongoose';
 import { UpdateWeddingMemberInput } from './dto/update-wedding-member.input';
 import { UpdateWeddingHantaranInput } from './dto/update-wedding-hantaran.input';
+import { UpdateWeddingVendorInput } from './dto/update-wedding-vendor.input';
 
 @Resolver(() => Wedding)
 export class WeddingResolver {
@@ -21,13 +22,16 @@ export class WeddingResolver {
   }
 
   @Query(() => [Wedding], { name: 'findAllWeddings' })
-  findAllWeddings() {
-    return this.weddingService.findAll();
+  findAllWeddings(
+    @Args('skip', { type: () => Int }) skip: number,
+    @Args('limit', { type: () => Int }) limit: number,
+  ) {
+    return this.weddingService.findAll(skip, limit);
   }
 
   @Query(() => Wedding, { name: 'findWeddingById' })
-  findOneWedding(
-    @Args('id', { type: () => Int }) id: MongooseSchema.Types.ObjectId,
+  findWeddingById(
+    @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
   ) {
     return this.weddingService.findById(id);
   }
@@ -69,6 +73,17 @@ export class WeddingResolver {
     return this.weddingService.updateHantaran(
       updateWeddingHantaranInput._id,
       updateWeddingHantaranInput,
+    );
+  }
+
+  @Mutation(() => Boolean)
+  updateWeddingVendor(
+    @Args('updateWeddingVendorInput')
+    updateWeddingVendorInput: UpdateWeddingVendorInput,
+  ) {
+    return this.weddingService.updateVendor(
+      updateWeddingVendorInput._id,
+      updateWeddingVendorInput,
     );
   }
 

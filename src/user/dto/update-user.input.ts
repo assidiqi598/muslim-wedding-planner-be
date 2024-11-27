@@ -8,8 +8,8 @@ export class UpdateUserInput extends PartialType(CreateUserInput) {
   _id: MongooseSchema.Types.ObjectId;
 
   @Field(() => String, { nullable: true })
-  wedding?: MongooseSchema.Types.ObjectId;
+  wedding: MongooseSchema.Types.ObjectId;
 
   @Field(() => [String], { nullable: true })
-  otherWedings?: MongooseSchema.Types.ObjectId[];
+  otherWeddings: MongooseSchema.Types.ObjectId[];
 }

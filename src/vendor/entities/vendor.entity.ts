@@ -55,7 +55,7 @@ export class Vendor {
   services: VendorService[];
 
   @Field(() => Wedding, { nullable: true })
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Wedding' })
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Wedding' }] })
   weddings: Wedding[];
 }
 

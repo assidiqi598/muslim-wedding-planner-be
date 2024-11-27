@@ -27,15 +27,15 @@ export class User {
     ref: 'Wedding',
     required: false,
   })
-  wedding?: Wedding;
+  wedding: Wedding;
 
   @Field(() => [Wedding], { nullable: true })
   @Prop({
-    type: MongooseSchema.Types.ObjectId,
-    ref: 'Wedding',
-    required: false,
+    type: [
+      { type: MongooseSchema.Types.ObjectId, ref: 'Wedding', required: false },
+    ],
   })
-  otherWeddings?: Wedding[];
+  otherWeddings: Wedding[];
 
   @Field(() => String)
   @Prop({ required: true })

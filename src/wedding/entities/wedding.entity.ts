@@ -20,7 +20,11 @@ export class Wedding {
   bride: User;
 
   @Field(() => [User], { nullable: true })
-  @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'User', required: false })
+  @Prop({
+    type: [
+      { type: MongooseSchema.Types.ObjectId, ref: 'User', required: false },
+    ],
+  })
   member: User[];
 
   @Field(() => String)
@@ -32,11 +36,11 @@ export class Wedding {
   budget: Number;
 
   @Field(() => [SelectedVendor], { nullable: true })
-  @Prop({ type: [SelectedVendor], required: false, default: [] })
+  @Prop({ type: [{ type: SelectedVendor, required: false }], default: [] })
   vendors: SelectedVendor[];
 
   @Field(() => [Hantaran], { nullable: true })
-  @Prop({ type: [Hantaran], required: false, default: [] })
+  @Prop({ type: [{ type: Hantaran, required: false }], default: [] })
   hantaran: Hantaran[];
 
   @Field(() => Date, { nullable: true })

@@ -1,4 +1,5 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Schema as MongooseSchema } from 'mongoose';
 import { VendorService } from './vendor.service';
 import { Vendor } from './entities/vendor.entity';
 import { CreateVendorInput } from './dto/create-vendor.input';
@@ -9,27 +10,38 @@ export class VendorResolver {
   constructor(private readonly vendorService: VendorService) {}
 
   @Mutation(() => Vendor)
-  createVendor(@Args('createVendorInput') createVendorInput: CreateVendorInput) {
+  createVendor(
+    @Args('createVendorInput') createVendorInput: CreateVendorInput,
+  ) {
     return this.vendorService.create(createVendorInput);
   }
 
-  @Query(() => [Vendor], { name: 'vendor' })
-  findAll() {
-    return this.vendorService.findAll();
+  @Query(() => [Vendor], { name: 'findAllVendor' })
+  findAllVendors(
+    @Args('skip', { type: () => Int }) skip: number,
+    @Args('limit', { type: () => Int }) limit: number,
+  ) {
+    return this.vendorService.findAll(skip, limit);
   }
 
-  @Query(() => Vendor, { name: 'vendor' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.vendorService.findOne(id);
+  @Query(() => Vendor, { name: 'findVendorById' })
+  findById(
+    @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
+  ) {
+    return this.vendorService.findById(id);
   }
 
   @Mutation(() => Vendor)
-  updateVendor(@Args('updateVendorInput') updateVendorInput: UpdateVendorInput) {
-    return this.vendorService.update(updateVendorInput.id, updateVendorInput);
+  updateVendor(
+    @Args('updateVendorInput') updateVendorInput: UpdateVendorInput,
+  ) {
+    return this.vendorService.update(updateVendorInput._id, updateVendorInput);
   }
 
   @Mutation(() => Vendor)
-  removeVendor(@Args('id', { type: () => Int }) id: number) {
+  removeVendor(
+    @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
+  ) {
     return this.vendorService.remove(id);
   }
 }

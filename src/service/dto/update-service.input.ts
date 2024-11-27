@@ -1,8 +1,9 @@
 import { CreateServiceInput } from './create-service.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { InputType, Field, PartialType } from '@nestjs/graphql';
+import { Schema as MongooseSchema } from 'mongoose';
 
 @InputType()
 export class UpdateServiceInput extends PartialType(CreateServiceInput) {
-  @Field(() => Int)
-  id: number;
+  @Field(() => String)
+  _id: MongooseSchema.Types.ObjectId;
 }

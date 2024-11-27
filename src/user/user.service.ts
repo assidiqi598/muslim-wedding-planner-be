@@ -11,6 +11,7 @@ export class UserService {
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
   ) {}
+
   create(createUserInput: CreateUserInput): Promise<User> {
     const createdUser = new this.userModel(createUserInput);
     return createdUser.save();
