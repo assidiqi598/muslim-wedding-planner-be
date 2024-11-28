@@ -33,6 +33,7 @@ import { ServiceModule } from './service/service.module';
     }),
     ConfigModule.forRoot({
       cache: true,
+      isGlobal: true,
     }),
     UserModule,
     WeddingModule,
