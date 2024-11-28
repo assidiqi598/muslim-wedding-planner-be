@@ -19,11 +19,11 @@ export class Vendor {
   description: String;
 
   @Field(() => String, { nullable: true })
-  @Prop({ unique: true, required: false })
+  @Prop({ unique: false, sparse: true, required: false })
   email: String;
 
   @Field(() => String, { nullable: true })
-  @Prop({ required: false })
+  @Prop({ required: false, unique: false, sparse: true })
   phoneNumber: String;
 
   @Field(() => String, { nullable: true })
@@ -51,7 +51,11 @@ export class Vendor {
   link: String;
 
   @Field(() => [VendorService])
-  @Prop({ type: [VendorService], required: true })
+  @Prop({
+    type: [{ type: VendorService, required: true }],
+    required: true,
+    default: [],
+  })
   services: VendorService[];
 
   @Field(() => Wedding, { nullable: true })
@@ -59,7 +63,16 @@ export class Vendor {
   weddings: Wedding[];
 }
 
-export const VendorSchema = SchemaFactory.createForClass(Vendor);
+export const VendorSchema = SchemaFactory.createForClass(Vendor).index(
+  { email: 1, phoneNumber: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      email: { $ne: null },
+      phoneNumber: { $ne: null },
+    },
+  },
+);
 
 export type VendorDocumentOverride = {
   services: Types.DocumentArray<VendorService>;

@@ -31,7 +31,9 @@ export class WeddingService {
     id: MongooseSchema.Types.ObjectId,
     updateWeddingInput: UpdateWeddingInput,
   ): Promise<Wedding> {
-    return this.weddingModel.findByIdAndUpdate(id, updateWeddingInput).exec();
+    return this.weddingModel
+      .findByIdAndUpdate(id, updateWeddingInput, { new: true })
+      .exec();
   }
 
   updateMember(

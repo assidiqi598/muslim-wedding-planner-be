@@ -44,7 +44,9 @@ export class ServiceResolver {
   }
 
   @Mutation(() => Service)
-  removeService(@Args('id', { type: () => Int }) id: number) {
+  removeService(
+    @Args('id', { type: () => Int }) id: MongooseSchema.Types.ObjectId,
+  ) {
     return this.serviceService.remove(id);
   }
 }

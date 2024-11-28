@@ -3,7 +3,7 @@ import { CreateServiceInput } from './dto/create-service.input';
 import { UpdateServiceInput } from './dto/update-service.input';
 import { InjectModel } from '@nestjs/mongoose';
 import { Service, ServiceDocument } from './entities/service.entity';
-import { Model, Schema as MongooseSchema } from 'mongoose';
+import { DeleteResult, Model, Schema as MongooseSchema } from 'mongoose';
 
 @Injectable()
 export class ServiceService {
@@ -33,10 +33,12 @@ export class ServiceService {
     id: MongooseSchema.Types.ObjectId,
     updateServiceInput: UpdateServiceInput,
   ) {
-    return `This action updates a #${id} service`;
+    return this.serviceModel
+      .findByIdAndUpdate(id, updateServiceInput, { new: true })
+      .exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} service`;
+  remove(id: MongooseSchema.Types.ObjectId): Promise<DeleteResult> {
+    return this.serviceModel.deleteOne({ _id: id });
   }
 }

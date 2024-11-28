@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Schema as MongooseSchema, Types } from 'mongoose';
 import { UserService } from './user.service';
@@ -7,8 +6,7 @@ import {
   closeMongodConnection,
   mongooseTestModule,
 } from 'src/common/helpers/mongoose.helper';
-import { Gender, User, UserSchema } from './entities/user.entity';
-import { CreateUserInput } from './dto/create-user.input';
+import { User, UserSchema } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { WeddingService } from 'src/wedding/wedding.service';
 import { WeddingModule } from 'src/wedding/wedding.module';
@@ -32,7 +30,6 @@ describe('UserService', () => {
       providers: [UserService, WeddingService],
       imports: [
         mongooseTestModule(),
-        WeddingModule,
         MongooseModule.forFeature([
           {
             name: Wedding.name,

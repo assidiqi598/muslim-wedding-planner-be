@@ -29,7 +29,9 @@ export class VendorService {
     id: MongooseSchema.Types.ObjectId,
     updateVendorInput: UpdateVendorInput,
   ) {
-    return this.vendorModel.findByIdAndUpdate(id, updateVendorInput).exec();
+    return this.vendorModel
+      .findByIdAndUpdate(id, updateVendorInput, { new: true })
+      .exec();
   }
 
   remove(id: MongooseSchema.Types.ObjectId) {

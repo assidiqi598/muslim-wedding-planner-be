@@ -12,11 +12,23 @@ export class Wedding {
   _id: MongooseSchema.Types.ObjectId;
 
   @Field(() => User, { nullable: true })
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: false })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
+    required: false,
+    unique: false,
+    sparse: true,
+  })
   groom: User;
 
   @Field(() => User, { nullable: true })
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: false })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
+    required: false,
+    unique: false,
+    sparse: true,
+  })
   bride: User;
 
   @Field(() => [User], { nullable: true })
@@ -159,7 +171,14 @@ export class Wedding {
   // @Prop({ required: false })
   // totalUniformPrice: Number;
 }
-export const WeddingSchema = SchemaFactory.createForClass(Wedding);
+
+export const WeddingSchema = SchemaFactory.createForClass(Wedding).index(
+  { groom: 1, bride: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { groom: { $ne: null }, bride: { $ne: null } },
+  },
+);
 
 export type WeddingDocumentOverride = {
   vendors: Types.DocumentArray<SelectedVendor>;
