@@ -13,6 +13,7 @@ import { WeddingModule } from 'src/wedding/wedding.module';
 import { Wedding, WeddingSchema } from 'src/wedding/entities/wedding.entity';
 import { createWeddingInput } from 'src/wedding/stubs/wedding.stub';
 import { createUserInput } from './stubs/user.stub';
+import { ConfigService } from '@nestjs/config';
 
 const updateUserInput: UpdateUserInput = {
   _id: new MongooseSchema.Types.ObjectId(''),
@@ -27,7 +28,21 @@ describe('UserService', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      providers: [UserService, WeddingService],
+      providers: [
+        UserService,
+        WeddingService,
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key: string) => {
+              if (key === 'SALT_ROUNDS') {
+                return 9;
+              }
+              return null;
+            }),
+          },
+        },
+      ],
       imports: [
         mongooseTestModule(),
         MongooseModule.forFeature([
@@ -85,6 +100,16 @@ describe('UserService', () => {
 
     // Prop which is not updated should remain
     expect(updatedUser.email).toBe(createUserInput.email);
+  });
+
+  it('should update last login of the user', async () => {
+    const lastLogin = await userService.updateLastLogin(updateUserInput._id);
+
+    expect(lastLogin.getDay()).toBe(new Date().getDay());
+    expect(lastLogin.getDate()).toBe(new Date().getDate());
+    expect(lastLogin.getMonth()).toBe(new Date().getMonth());
+    expect(lastLogin.getFullYear()).toBe(new Date().getFullYear());
+    expect(lastLogin.getHours()).toBe(new Date().getHours());
   });
 
   it('it should remove the test user', async () => {

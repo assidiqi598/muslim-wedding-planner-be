@@ -20,19 +20,19 @@ export class Vendor {
 
   @Field(() => String, { nullable: true })
   @Prop({ unique: false, sparse: true, required: false })
-  email: String;
+  email: String | null;
 
   @Field(() => String, { nullable: true })
   @Prop({ required: false, unique: false, sparse: true })
-  phoneNumber: String;
+  phoneNumber: String | null;
 
   @Field(() => String, { nullable: true })
   @Prop({ required: false })
-  address: String;
+  address: String | null;
 
   @Field(() => Int, { nullable: true })
   @Prop({ required: false })
-  postCode: Number;
+  postCode: Number | null;
 
   @Field(() => String)
   @Prop({ required: true })
@@ -48,7 +48,7 @@ export class Vendor {
 
   @Field(() => String, { nullable: true })
   @Prop({ required: false })
-  link: String;
+  link: String | null;
 
   @Field(() => [VendorService])
   @Prop({
@@ -60,7 +60,7 @@ export class Vendor {
 
   @Field(() => Wedding, { nullable: true })
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Wedding' }] })
-  weddings: Wedding[];
+  weddings: Wedding[] | null;
 }
 
 export const VendorSchema = SchemaFactory.createForClass(Vendor).index(

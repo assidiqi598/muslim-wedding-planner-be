@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { WeddingModule } from './wedding/wedding.module';
 import { VendorModule } from './vendor/vendor.module';
 import { ServiceModule } from './service/service.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ServiceModule } from './service/service.module';
       playground: false,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      context: ({ req }) => ({ req }),
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -39,6 +41,7 @@ import { ServiceModule } from './service/service.module';
     WeddingModule,
     VendorModule,
     ServiceModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [AppService, AppResolver],

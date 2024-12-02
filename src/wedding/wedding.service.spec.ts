@@ -22,6 +22,7 @@ import { createWeddingInput } from './stubs/wedding.stub';
 import { createUserInput } from 'src/user/stubs/user.stub';
 import { createServiceInput } from 'src/service/stubs/service.stub';
 import { createVendorInput } from 'src/vendor/stubs/vendor.stub';
+import { ConfigService } from '@nestjs/config';
 
 const updateWeddingInput: UpdateWeddingInput = {
   _id: new MongooseSchema.Types.ObjectId(''),
@@ -65,7 +66,13 @@ describe('WeddingService', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      providers: [WeddingService, UserService, VendorService, ServiceService],
+      providers: [
+        WeddingService,
+        UserService,
+        VendorService,
+        ServiceService,
+        ConfigService,
+      ],
       imports: [
         mongooseTestModule(),
         MongooseModule.forFeature([

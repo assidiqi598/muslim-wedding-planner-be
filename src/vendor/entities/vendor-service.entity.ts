@@ -12,7 +12,7 @@ export class VendorService {
 
   @Field(() => String, { nullable: true })
   @Prop({ required: false })
-  priceRange: String;
+  priceRange: String | null;
 
   @Field(() => String)
   @Prop({ default: '' })

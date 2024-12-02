@@ -6,24 +6,24 @@ import {
   IsStrongPassword,
   MinLength,
 } from 'class-validator';
-import { Gender } from '../entities/user.entity';
+import { Gender } from 'src/user/entities/user.entity';
 
 @InputType()
-export class CreateUserInput {
+export class SignUpInput {
   @Field(() => String)
   @IsString()
   @MinLength(3)
-  name: String;
+  name: string;
 
   @Field(() => String)
   @IsEmail()
-  email: String;
+  email: string;
 
   @Field(() => String)
   @IsStrongPassword()
-  password: String;
+  password: string;
 
   @Field(() => String)
   @IsEnum(Gender)
-  gender: String;
+  gender: string;
 }

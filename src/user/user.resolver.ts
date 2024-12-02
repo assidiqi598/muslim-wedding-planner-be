@@ -1,18 +1,16 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
-import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { Schema as MongooseSchema } from 'mongoose';
+import { DeleteResult, Schema as MongooseSchema } from 'mongoose';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
-
-  @Mutation(() => String)
-  async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return (await this.userService.create(createUserInput))._id.toString();
-  }
+  constructor(
+    private readonly userService: UserService,
+  ) {}
 
   // @Query(() => [User], { name: 'findAllUsers', nullable: true })
   // findAll() {
@@ -24,14 +22,18 @@ export class UserResolver {
     description: 'Get a user profile based on id',
     nullable: true,
   })
+  @UseGuards(JwtAuthGuard)
   findById(
     @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
-  ) {
+  ): Promise<User> {
     return this.userService.findById(id);
   }
 
   @Mutation(() => Boolean)
-  async updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+  @UseGuards(JwtAuthGuard)
+  async updateUser(
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+  ): Promise<Boolean> {
     return (
       (await this.userService.updateById(updateUserInput._id, updateUserInput))
         ._id !== undefined
@@ -39,10 +41,11 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
+  @UseGuards(JwtAuthGuard)
   removeUser(
     @Args('id', { type: () => String })
     id: MongooseSchema.Types.ObjectId,
-  ) {
+  ): Promise<DeleteResult> {
     return this.userService.removeById(id);
   }
 }

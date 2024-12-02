@@ -19,7 +19,7 @@ export class Wedding {
     unique: false,
     sparse: true,
   })
-  groom: User;
+  groom: User | null;
 
   @Field(() => User, { nullable: true })
   @Prop({
@@ -29,7 +29,7 @@ export class Wedding {
     unique: false,
     sparse: true,
   })
-  bride: User;
+  bride: User | null;
 
   @Field(() => [User], { nullable: true })
   @Prop({
@@ -37,7 +37,7 @@ export class Wedding {
       { type: MongooseSchema.Types.ObjectId, ref: 'User', required: false },
     ],
   })
-  member: User[];
+  member: User[] | null;
 
   @Field(() => String)
   @Prop({ required: false, default: '' })
@@ -49,19 +49,19 @@ export class Wedding {
 
   @Field(() => [SelectedVendor], { nullable: true })
   @Prop({ type: [{ type: SelectedVendor, required: false }], default: [] })
-  vendors: SelectedVendor[];
+  vendors: SelectedVendor[] | null;
 
   @Field(() => [Hantaran], { nullable: true })
   @Prop({ type: [{ type: Hantaran, required: false }], default: [] })
-  hantaran: Hantaran[];
+  hantaran: Hantaran[] | null;
 
   @Field(() => Date, { nullable: true })
   @Prop({ type: Date, required: false })
-  startDate: Date;
+  startDate: Date | null;
 
   @Field(() => Date, { nullable: true })
   @Prop({ type: Date, required: false })
-  endDate: Date;
+  endDate: Date | null;
 
   // @Field(() => Vendor)
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Vendor', required: false })

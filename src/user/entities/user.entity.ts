@@ -27,7 +27,7 @@ export class User {
     ref: 'Wedding',
     required: false,
   })
-  wedding: Wedding;
+  wedding: Wedding | null;
 
   @Field(() => [Wedding], { nullable: true })
   @Prop({
@@ -35,19 +35,19 @@ export class User {
       { type: MongooseSchema.Types.ObjectId, ref: 'Wedding', required: false },
     ],
   })
-  otherWeddings: Wedding[];
+  otherWeddings: Wedding[] | null;
 
   @Field(() => String)
   @Prop({ required: true })
-  name: String;
+  name: string;
 
   @Field(() => String)
   @Prop({ unique: true, required: true })
-  email: String;
+  email: string;
 
   @Field(() => String)
   @Prop({ required: true })
-  password: String;
+  password: string;
 
   @Field(() => Gender)
   @Prop({ type: String, enum: Gender, required: true })
@@ -55,7 +55,11 @@ export class User {
 
   @Field(() => Boolean)
   @Prop({ default: false })
-  isVerified: Boolean;
+  isVerified?: Boolean;
+
+  @Field(() => Date)
+  @Prop({ type: Date, default: new Date() })
+  lastLogin?: Date;
 }
 
 export type UserDocument = HydratedDocument<User>;

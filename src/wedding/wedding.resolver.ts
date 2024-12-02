@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Context } from '@nestjs/graphql';
 import { WeddingService } from './wedding.service';
 import { Wedding } from './entities/wedding.entity';
 import { CreateWeddingInput } from './dto/create-wedding.input';
@@ -7,12 +7,15 @@ import { Schema as MongooseSchema } from 'mongoose';
 import { UpdateWeddingMemberInput } from './dto/update-wedding-member.input';
 import { UpdateWeddingHantaranInput } from './dto/update-wedding-hantaran.input';
 import { UpdateWeddingVendorInput } from './dto/update-wedding-vendor.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Resolver(() => Wedding)
 export class WeddingResolver {
   constructor(private readonly weddingService: WeddingService) {}
 
   @Mutation(() => String)
+  @UseGuards(JwtAuthGuard)
   async createWedding(
     @Args('createWeddingInput') createWeddingInput: CreateWeddingInput,
   ) {
@@ -22,6 +25,7 @@ export class WeddingResolver {
   }
 
   @Query(() => [Wedding], { name: 'findAllWeddings' })
+  @UseGuards(JwtAuthGuard)
   findAllWeddings(
     @Args('skip', { type: () => Int }) skip: number,
     @Args('limit', { type: () => Int }) limit: number,
@@ -30,6 +34,7 @@ export class WeddingResolver {
   }
 
   @Query(() => Wedding, { name: 'findWeddingById' })
+  @UseGuards(JwtAuthGuard)
   findWeddingById(
     @Args('id', { type: () => String }) id: MongooseSchema.Types.ObjectId,
   ) {
@@ -37,6 +42,7 @@ export class WeddingResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
   async updateWeddingInfo(
     @Args('updateWeddingInput') updateWeddingInput: UpdateWeddingInput,
   ) {
@@ -51,6 +57,7 @@ export class WeddingResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
   updateWeddingMember(
     @Args('updateWeddingMemberInput')
     updateWeddingMemberInput: UpdateWeddingMemberInput,
@@ -66,6 +73,7 @@ export class WeddingResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
   updateWeddingHantaran(
     @Args('updateWeddingHantaranInput')
     updateWeddingHantaranInput: UpdateWeddingHantaranInput,
@@ -77,6 +85,7 @@ export class WeddingResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
   updateWeddingVendor(
     @Args('updateWeddingVendorInput')
     updateWeddingVendorInput: UpdateWeddingVendorInput,
@@ -88,8 +97,10 @@ export class WeddingResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
   removeWedding(
     @Args('id', { type: () => Int }) id: MongooseSchema.Types.ObjectId,
+    @Context('req') req: any,
   ) {
     return this.weddingService.removeById(id);
   }

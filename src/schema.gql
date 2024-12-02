@@ -70,6 +70,7 @@ type User {
   password: String!
   gender: Gender!
   isVerified: Boolean!
+  lastLogin: DateTime!
 }
 
 enum Gender {
@@ -79,28 +80,32 @@ enum Gender {
 
 type Query {
   getHello: String!
-  findAllUsers: [User!]
 
   """Get a user profile based on id"""
   findUserById(id: String!): User
-  findAllWeddings: [Wedding!]!
-  findWeddingById(id: Int!): Wedding!
-  vendor(id: Int!): Vendor!
-  service(id: Int!): Service!
+  findAllWeddings(skip: Int!, limit: Int!): [Wedding!]!
+  findWeddingById(id: String!): Wedding!
+  findAllVendor(skip: Int!, limit: Int!): [Vendor!]!
+  findVendorById(id: String!): Vendor!
+  findAllServices: [Service!]!
+  findServiceById(id: String!): Service!
+  findServiceByName(name: String!): Service!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): String!
-  updateUser(updateUserInput: UpdateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): Boolean!
   removeUser(id: String!): User!
+  login(loginInput: LoginInput!): String!
   createWedding(createWeddingInput: CreateWeddingInput!): String!
   updateWeddingInfo(updateWeddingInput: UpdateWeddingInput!): Boolean!
   updateWeddingMember(updateWeddingMemberInput: UpdateWeddingMemberInput!): Boolean!
   updateWeddingHantaran(updateWeddingHantaranInput: UpdateWeddingHantaranInput!): Boolean!
+  updateWeddingVendor(updateWeddingVendorInput: UpdateWeddingVendorInput!): Boolean!
   removeWedding(id: Int!): Boolean!
   createVendor(createVendorInput: CreateVendorInput!): Vendor!
   updateVendor(updateVendorInput: UpdateVendorInput!): Vendor!
-  removeVendor(id: Int!): Vendor!
+  removeVendor(id: String!): Vendor!
   createService(createServiceInput: CreateServiceInput!): Service!
   updateService(updateServiceInput: UpdateServiceInput!): Service!
   removeService(id: Int!): Service!
@@ -121,6 +126,11 @@ input UpdateUserInput {
   _id: String!
   wedding: String
   otherWeddings: [String!]
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }
 
 input CreateWeddingInput {
@@ -154,24 +164,71 @@ input HantaranInput {
   isPurchased: Boolean
 }
 
+input UpdateWeddingVendorInput {
+  _id: String!
+  vendors: [VendorInput!]!
+}
+
+input VendorInput {
+  vendor: String!
+  service: String!
+  cost: Int
+  note: String
+}
+
 input CreateVendorInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  description: String
+  email: String
+  phoneNumber: String
+  address: String
+  postCode: Int
+  kecamatan: String!
+  kabupaten: String!
+  province: String!
+  link: String
+  services: [VendorServiceInput!]!
+}
+
+input VendorServiceInput {
+  service: String!
+  priceRange: String
+  description: String
 }
 
 input UpdateVendorInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  description: String
+  email: String
+  phoneNumber: String
+  address: String
+  postCode: Int
+  kecamatan: String
+  kabupaten: String
+  province: String
+  link: String
+  services: [VendorServiceInput!]
+  _id: String!
+  weddings: [String!]
 }
 
 input CreateServiceInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  """
+  Value should be capital and space should use underscore, example: "RIAS_HANTARAN"
+  """
+  name: String!
+
+  """Name of the service which is displayed in frontend"""
+  displayName: String!
 }
 
 input UpdateServiceInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  """
+  Value should be capital and space should use underscore, example: "RIAS_HANTARAN"
+  """
+  name: String
+
+  """Name of the service which is displayed in frontend"""
+  displayName: String
+  _id: String!
 }

@@ -36,6 +36,17 @@ export class UserService {
     return this.userModel.findByIdAndUpdate(id, updateUserInput, { new: true });
   }
 
+  async updateLastLogin(id: MongooseSchema.Types.ObjectId): Promise<Date> {
+    const now = new Date();
+    return (
+      await this.userModel.findByIdAndUpdate(
+        id,
+        { lastLogin: now },
+        { new: true },
+      )
+    ).lastLogin;
+  }
+
   removeById(id: MongooseSchema.Types.ObjectId): Promise<DeleteResult> {
     return this.userModel.deleteOne({ _id: id });
   }
