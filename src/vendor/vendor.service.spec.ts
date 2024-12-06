@@ -93,11 +93,14 @@ describe('VendorService', () => {
     const vendor2 = await vendorService.create(vendorInput);
     const vendor3 = await vendorService.create(vendorInput);
 
-    const vendors = await vendorService.findAll(1, 3);
-    expect(vendors.length).toBe(3);
+    let vendors = await vendorService.findAll(1, 3);
+    expect(vendors).toHaveLength(3);
     expect(vendors[0]._id).toStrictEqual(vendor1._id);
     expect(vendors[1]._id).toStrictEqual(vendor2._id);
     expect(vendors[2]._id).toStrictEqual(vendor3._id);
+
+    vendors = await vendorService.findAll();
+    expect(vendors).toHaveLength(4);
   });
 
   it('should find a vendor based on _id', async () => {

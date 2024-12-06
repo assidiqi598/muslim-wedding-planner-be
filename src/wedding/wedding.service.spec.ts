@@ -183,11 +183,14 @@ describe('WeddingService', () => {
       groom: groom3._id,
     });
 
-    const weddings = await weddingService.findAll(1, 3);
-
+    let weddings = await weddingService.findAll(1, 3);
+    expect(weddings).toHaveLength(3);
     expect(weddings[0]._id).toStrictEqual(wedding1._id);
     expect(weddings[1]._id).toStrictEqual(wedding2._id);
     expect(weddings[2]._id).toStrictEqual(wedding3._id);
+
+    weddings = await weddingService.findAll();
+    expect(weddings).toHaveLength(4);
   });
 
   it('should update general info of a wedding', async () => {

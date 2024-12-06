@@ -9,11 +9,9 @@ import {
 import { User, UserSchema } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { WeddingService } from 'src/wedding/wedding.service';
-import { WeddingModule } from 'src/wedding/wedding.module';
 import { Wedding, WeddingSchema } from 'src/wedding/entities/wedding.entity';
 import { createWeddingInput } from 'src/wedding/stubs/wedding.stub';
 import { createUserInput } from './stubs/user.stub';
-import { ConfigService } from '@nestjs/config';
 
 const updateUserInput: UpdateUserInput = {
   _id: new MongooseSchema.Types.ObjectId(''),
@@ -28,21 +26,7 @@ describe('UserService', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      providers: [
-        UserService,
-        WeddingService,
-        {
-          provide: ConfigService,
-          useValue: {
-            get: jest.fn((key: string) => {
-              if (key === 'SALT_ROUNDS') {
-                return 9;
-              }
-              return null;
-            }),
-          },
-        },
-      ],
+      providers: [UserService, WeddingService],
       imports: [
         mongooseTestModule(),
         MongooseModule.forFeature([

@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import helmet from 'helmet';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
@@ -46,4 +47,24 @@ import { AuthModule } from './auth/auth.module';
   controllers: [],
   providers: [AppService, AppResolver],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(helmet()).forRoutes('*'); // Apply Helmet globally
+    consumer
+      .apply(
+        helmet.contentSecurityPolicy({
+          directives: {
+            defaultSrc: ["'self'"], // Allow only self-hosted resources
+            scriptSrc: ["'self'"], // Only allow scripts from the same origin
+            styleSrc: ["'self'", "'unsafe-inline'"], // Allow styles from the same origin, including inline styles
+            objectSrc: ["'none'"], // Prevent embedding objects (Flash, etc.)
+            imgSrc: ["'self'", 'data:'], // Allow images from the same origin and data URIs
+            connectSrc: ["'self'"], // Allow GraphQL requests to the same origin
+            fontSrc: ["'self'"], // Allow fonts from the same origin
+            upgradeInsecureRequests: [], // Automatically upgrade HTTP to HTTPS
+          },
+        }),
+      )
+      .forRoutes('*'); // Apply to all routes
+  }
+}

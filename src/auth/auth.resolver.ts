@@ -15,17 +15,7 @@ export class AuthResolver {
     @Args('createUserInput') signUpInput: SignUpInput,
     @Context() context: GraphQLContext,
   ): Promise<LoginResponse> {
-    const { refreshToken, ...data } =
-      await this.authService.signUp(signUpInput);
-
-    context.res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-    });
-
-    return data;
+    return await this.authService.signUp(signUpInput, context.res);
   }
 
   @Mutation(() => LoginResponse)
@@ -33,38 +23,21 @@ export class AuthResolver {
     @Args('loginInput') loginInput: LoginInput,
     @Context() context: GraphQLContext,
   ): Promise<LoginResponse> {
-    const { refreshToken, ...data } = await this.authService.login(loginInput);
-
-    context.res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-    });
-
-    return data;
+    return await this.authService.login(loginInput, context.res);
   }
 
   @Mutation(() => LoginResponse)
   async refreshToken(
     @Context() context: GraphQLContext,
+    @Args('csrfToken') csrfToken: string,
   ): Promise<LoginResponse> {
     const refreshToken = context.req.cookies['refreshToken'];
+    const csrfTokenCookie = context.req.cookies['csrfToken'];
 
-    if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token not found');
+    if (!refreshToken || !csrfTokenCookie || !csrfToken) {
+      throw new UnauthorizedException('One or more tokens missing');
     }
 
-    const { refreshToken: newRefreshToken, ...data } =
-      await this.authService.refreshToken(refreshToken);
-
-    context.res.cookie('refreshToken', newRefreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-    });
-
-    return data;
+    return await this.authService.refreshToken(refreshToken, context.res);
   }
 }
